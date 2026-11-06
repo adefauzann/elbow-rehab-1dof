@@ -1,0 +1,703 @@
+/* 
+   static/css/styles.css
+   Style CSS untuk Web Dashboard Monitoring Rehabilitasi Sendi Siku 1-DOF.
+   Menggunakan dark theme premium dengan gaya glassmorphism.
+*/
+
+:root {
+    --bg-main: #0d1117;
+    --bg-card: rgba(22, 27, 34, 0.7);
+    --bg-header: rgba(22, 27, 34, 0.85);
+    
+    --border-color: rgba(48, 54, 61, 0.6);
+    --border-glowing: #1f6feb;
+    --border-accent: #e94560;
+    
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-dark: #484f58;
+    
+    /* Palette colors */
+    --color-target: #4fc3f7;
+    --color-actual: #66bb6a;
+    --color-error: #ffa726;
+    --color-fuzzy: #ab47bc;
+    --color-safety-ok: #00e676;
+    --color-safety-err: #ef5350;
+    --color-safety-warn: #ffd54f;
+    --color-idle: #78909c;
+    --color-reset: #ffd54f;
+    /* Baru: error sensor & motor */
+    --color-sensor-err: #ef9a9a;
+    --color-motor-err: #ce93d8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Glassmorphism class */
+.glassmorphic {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 16px;
+    gap: 16px;
+}
+
+/* ==========================================================================
+   FITUR 01: HEADER STYLING
+   ========================================================================== */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-radius: 12px;
+    border-bottom: 2px solid var(--border-accent);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo-icon {
+    font-size: 32px;
+    background: linear-gradient(135deg, var(--border-accent), #c73652);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(233, 69, 96, 0.4));
+}
+
+.title-wrapper h1 {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--text-primary);
+}
+
+.title-wrapper .subtitle {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+/* Connection Panel */
+.connection-panel {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(13, 17, 23, 0.5);
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.conn-sub-panel {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+.wifi-info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.wifi-info-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.wifi-info-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-target);
+    background-color: #21262d;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 6px 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+    display: flex;
+    gap: 6px;
+}
+
+.connection-panel select {
+    background-color: #21262d;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+    min-width: 110px;
+}
+
+.connection-panel select:focus {
+    border-color: var(--border-glowing);
+}
+
+#btn-refresh-ports {
+    background-color: #21262d;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#btn-refresh-ports:hover {
+    background-color: #30363d;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--border-accent);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    height: 32px;
+}
+
+.btn-primary:hover {
+    background-color: #c73652;
+}
+
+.btn-primary.connected {
+    background-color: #238636;
+}
+
+.btn-primary.connected:hover {
+    background-color: #2ea043;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Status Badge */
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border: 1px solid transparent;
+}
+
+.status-badge.disconnected {
+    background: rgba(239, 83, 80, 0.1);
+    color: var(--color-safety-err);
+    border-color: rgba(239, 83, 80, 0.2);
+}
+
+.status-badge.connected {
+    background: rgba(0, 230, 118, 0.1);
+    color: var(--color-safety-ok);
+    border-color: rgba(0, 230, 118, 0.2);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.status-badge.connected .status-dot {
+    box-shadow: 0 0 8px var(--color-safety-ok);
+}
+
+/* Clock */
+.clock-panel {
+    text-align: right;
+}
+
+#clock-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#clock-date {
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+
+
+/* ==========================================================================
+   FITUR 02: METRIC CARDS
+   ========================================================================== */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.top-row {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    flex: 3;
+}
+
+.metric-card {
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-icon {
+    font-size: 18px;
+}
+
+.card-title {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 1.5px;
+}
+
+.card-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin: 12px 0;
+}
+
+.card-footer {
+    font-size: 9px;
+    color: var(--text-dark);
+    text-align: center;
+}
+
+/* Card custom border glows */
+.border-target { border-left: 4px solid var(--color-target); }
+.border-target .card-value { color: var(--color-target); }
+
+.border-actual { border-left: 4px solid var(--color-actual); }
+.border-actual .card-value { color: var(--color-actual); }
+
+.border-error { border-left: 4px solid var(--color-error); }
+.border-error .card-value { color: var(--color-error); }
+
+.border-fuzzy { border-left: 4px solid var(--color-fuzzy); }
+.border-fuzzy .card-value { color: var(--color-fuzzy); }
+
+.border-sensor-err { border-left: 4px solid var(--color-sensor-err); }
+.border-sensor-err .card-value { color: var(--color-sensor-err); }
+
+.border-motor-err { border-left: 4px solid var(--color-motor-err); }
+.border-motor-err .card-value { color: var(--color-motor-err); }
+
+/* Progress bars inside cards */
+.progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background-color: #21262d;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--border-glowing);
+    border-radius: 3px;
+    transition: width 0.1s ease;
+}
+
+.border-actual .progress-bar { background-color: var(--color-actual); }
+.border-fuzzy .progress-bar { background-color: var(--color-fuzzy); }
+
+
+/* ==========================================================================
+   FITUR 03: SAFETY PANEL
+   ========================================================================== */
+.safety-panel {
+    flex: 2;
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border 0.3s;
+}
+
+.safety-panel h2 {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--border-accent);
+    letter-spacing: 1.5px;
+}
+
+.safety-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.safety-item {
+    padding: 10px 8px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.safety-item:nth-child(4) {
+    grid-column: span 1;
+}
+
+.safety-label {
+    font-size: 8px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.safety-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.safety-indicator .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--text-dark);
+}
+
+.safety-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Safety values styles */
+.safety-indicator.ok { color: var(--color-safety-ok); }
+.safety-indicator.ok .dot { background-color: var(--color-safety-ok); box-shadow: 0 0 6px var(--color-safety-ok); }
+
+.safety-indicator.err { color: var(--color-safety-err); }
+.safety-indicator.err .dot { background-color: var(--color-safety-err); box-shadow: 0 0 6px var(--color-safety-err); }
+
+/* Blinking animations for critical system state */
+@keyframes blink-border {
+    0% { border-color: var(--border-color); }
+    50% { border-color: var(--color-safety-err); box-shadow: 0 0 10px rgba(239, 83, 80, 0.4); }
+    100% { border-color: var(--border-color); }
+}
+
+.safety-panel.critical-alert {
+    animation: blink-border 1s infinite;
+}
+
+@keyframes pulse-dot {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.4; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.pulse-animation .dot {
+    animation: pulse-dot 1s infinite;
+}
+
+
+/* ==========================================================================
+   FITUR 04: CHART STYLING
+   ========================================================================== */
+.charts-section {
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-header h2 {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--text-secondary);
+    letter-spacing: 1.5px;
+}
+
+.chart-controls, .history-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-secondary {
+    background-color: #21262d;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: #30363d;
+    border-color: var(--text-secondary);
+}
+
+.charts-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.chart-container {
+    padding: 12px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.main-chart {
+    height: 320px;
+    width: 100%;
+}
+
+.charts-sub-layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.sub-chart {
+    height: 220px;
+}
+
+
+/* ==========================================================================
+   FITUR 05: TABLE & EXPORT
+   ========================================================================== */
+.history-section {
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.session-counter {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+#filter-history {
+    background-color: #21262d;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    outline: none;
+    width: 160px;
+}
+
+#filter-history:focus {
+    border-color: var(--border-glowing);
+}
+
+.btn-success {
+    background-color: #238636;
+    color: white;
+    border: 1px solid #2ea043;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-success:hover {
+    background-color: #2ea043;
+}
+
+/* Table */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: left;
+}
+
+.history-table th {
+    background-color: rgba(22, 27, 34, 0.9);
+    color: var(--text-secondary);
+    font-weight: bold;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-color);
+    text-transform: uppercase;
+}
+
+.history-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(48, 54, 61, 0.4);
+    font-family: 'Inter', sans-serif;
+}
+
+.history-table tbody tr {
+    background-color: transparent;
+    transition: background-color 0.2s;
+}
+
+.history-table tbody tr:nth-child(even) {
+    background-color: rgba(22, 27, 34, 0.3);
+}
+
+.history-table tbody tr:hover {
+    background-color: rgba(31, 111, 235, 0.1);
+}
+
+.history-table td:nth-child(-n+8) {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.history-table td:nth-child(2),
+.history-table td:nth-child(3),
+.history-table td:nth-child(4),
+.history-table td:nth-child(5),
+.history-table td:nth-child(6),
+.history-table td:nth-child(7),
+.history-table td:nth-child(8) {
+    text-align: right;
+}
+
+.empty-row {
+    text-align: center;
+    padding: 24px !important;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Badges inside table */
+.tbl-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.badge-sangat-baik { background: rgba(102, 187, 106, 0.15); color: #66bb6a; border: 1px solid rgba(102, 187, 106, 0.3); }
+.badge-baik { background: rgba(38, 198, 218, 0.15); color: #26c6da; border: 1px solid rgba(38, 198, 218, 0.3); }
+.badge-cukup { background: rgba(255, 213, 79, 0.15); color: #ffd54f; border: 1px solid rgba(255, 213, 79, 0.3); }
+.badge-kurang { background: rgba(255, 167, 38, 0.15); color: #ffa726; border: 1px solid rgba(255, 167, 38, 0.3); }
+.badge-buruk { background: rgba(239, 83, 80, 0.15); color: #ef5350; border: 1px solid rgba(239, 83, 80, 0.3); }
+
+.badge-status-selesai { background: rgba(102, 187, 106, 0.15); color: #66bb6a; }
+.badge-status-terhenti { background: rgba(255, 213, 79, 0.15); color: #ffd54f; }
+.badge-status-error { background: rgba(239, 83, 80, 0.15); color: #ef5350; }
+
+
+/* ==========================================================================
+   FOOTER STYLING
+   ========================================================================== */
+.app-footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 11px;
+    color: var(--text-dark);
+}

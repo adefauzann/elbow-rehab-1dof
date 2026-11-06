@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Rehabilitasi Sendi Siku 1-DOF</title>
+    
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="/css/styles.css?v=5">
+</head>
+<body>
+    <div class="dashboard-container">
+        
+        <!-- ==================== FITUR 01: HEADER ==================== -->
+        <header class="app-header glassmorphic">
+            <div class="header-left">
+                <div class="logo-icon">⚕</div>
+                <div class="title-wrapper">
+                    <h1>SISTEM MONITORING REHABILITASI SENDI SIKU 1-DOF</h1>
+                    <p class="subtitle">Implementasi Logika Fuzzy Mamdani Berbasis Motor Stepper Closed-Loop</p>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="connection-panel">
+                    <div class="form-group">
+                        <label for="mode-select">Koneksi</label>
+                        <select id="mode-select">
+                            <option value="usb" selected>🔌 USB / Serial</option>
+                            <option value="wifi">📶 WiFi (Nirkabel)</option>
+                        </select>
+                    </div>
+
+                    <!-- Panel USB -->
+                    <div id="panel-usb" class="conn-sub-panel">
+                        <div class="form-group">
+                            <label for="port-select">Port COM</label>
+                            <div class="input-wrapper">
+                                <select id="port-select">
+                                    <option value="">Memindai...</option>
+                                </select>
+                                <button id="btn-refresh-ports" title="Refresh Port">↻</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="baud-select">Baud Rate</label>
+                            <select id="baud-select">
+                                <option value="9600">9600 bps</option>
+                                <option value="19200">19200 bps</option>
+                                <option value="38400">38400 bps</option>
+                                <option value="57600">57600 bps</option>
+                                <option value="115200" selected>115200 bps</option>
+                                <option value="250000">250000 bps</option>
+                            </select>
+                        </div>
+                        
+                        <button id="btn-connect" class="btn-primary">Hubungkan</button>
+                    </div>
+
+                    <!-- Panel WiFi -->
+                    <div id="panel-wifi" class="conn-sub-panel" style="display: none;">
+                        <div class="wifi-info-box">
+                            <span class="wifi-info-label">Hubungkan ESP32 ke:</span>
+                            <span class="wifi-info-value" id="wifi-target-ip">127.0.0.1:9000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div id="conn-status" class="status-badge disconnected">
+                    <span class="status-dot"></span>
+                    <span class="status-text">TIDAK TERHUBUNG</span>
+                </div>
+                <div class="clock-panel">
+                    <div id="clock-time">00:00:00</div>
+                    <div id="clock-date">--/--/----</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Row 1: Cards Realtime & Safety Status -->
+            <div class="top-row">
+                
+                <!-- ==================== FITUR 02: CARD MONITORING REAL-TIME ==================== -->
+                <section class="cards-grid">
+                    <!-- Card 1: Sudut Target -->
+                    <div class="metric-card glassmorphic border-target">
+                        <div class="card-header">
+                            <span class="card-icon">🎯</span>
+                            <span class="card-title">SUDUT TARGET</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-value" id="val-target">---</div>
+                        </div>
+                        <div class="card-footer">
+                            <p>Setpoint Gerakan Rehabilitasi</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2: Sudut Aktual -->
+                    <div class="metric-card glassmorphic border-actual">
+                        <div class="card-header">
+                            <span class="card-icon">📡</span>
+                            <span class="card-title">SUDUT AKTUAL</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-value" id="val-actual">---</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="bar-actual" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <p>Umpan Balik Sensor AS5600</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3: Error -->
+                    <div class="metric-card glassmorphic border-error">
+                        <div class="card-header">
+                            <span class="card-icon">△</span>
+                            <span class="card-title">ERROR</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-value" id="val-error">---</div>
+                        </div>
+                        <div class="card-footer">
+                            <p>Selisih Sudut Target & Aktual</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 4: Output Fuzzy -->
+                    <div class="metric-card glassmorphic border-fuzzy">
+                        <div class="card-header">
+                            <span class="card-icon">⬡</span>
+                            <span class="card-title">OUTPUT FUZZY</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-value" id="val-fuzzy">---</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="bar-fuzzy" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <p>Intensitas Output Defuzzifikasi</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Error Sensor -->
+                    <div class="metric-card glassmorphic border-sensor-err">
+                        <div class="card-header">
+                            <span class="card-icon">📻</span>
+                            <span class="card-title">ERROR SENSOR</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-value" id="val-sensor-err">---</div>
+                        </div>
+                        <div class="card-footer">
+                            <p>Sudut Aktual − Sudut Target</p>
+                        </div>
+                    </div>
+                </section>
+
+                
+                <!-- ==================== FITUR 03: STATUS SAFETY ==================== -->
+                <section class="safety-panel glassmorphic" id="safety-card">
+                    <h2>STATUS KEAMANAN SISTEM</h2>
+                    
+                    <div class="safety-grid">
+                        <!-- Indikator 1: Motor Stepper -->
+                        <div class="safety-item glassmorphic">
+                            <span class="safety-label">MOTOR STEPPER</span>
+                            <span class="safety-indicator" id="ind-motor">
+                                <span class="dot"></span>
+                                <span class="text">---</span>
+                            </span>
+                        </div>
+                        
+                        <!-- Indikator 2: Limit Switch Atas -->
+                        <div class="safety-item glassmorphic">
+                            <span class="safety-label">LIMIT ATAS</span>
+                            <span class="safety-indicator" id="ind-limit-atas">
+                                <span class="dot"></span>
+                                <span class="text">---</span>
+                            </span>
+                        </div>
+                        
+                        <!-- Indikator 3: Limit Switch Bawah -->
+                        <div class="safety-item glassmorphic">
+                            <span class="safety-label">LIMIT BAWAH</span>
+                            <span class="safety-indicator" id="ind-limit-bawah">
+                                <span class="dot"></span>
+                                <span class="text">---</span>
+                            </span>
+                        </div>
+                        
+                        <!-- Indikator 4: Status Mode -->
+                        <div class="safety-item glassmorphic">
+                            <span class="safety-label">MODE SISTEM</span>
+                            <span class="safety-badge" id="badge-mode">---</span>
+                        </div>
+                        
+                        <!-- Indikator 5: Sensor AS5600 -->
+                        <div class="safety-item glassmorphic">
+                            <span class="safety-label">SENSOR AS5600</span>
+                            <span class="safety-indicator" id="ind-sensor">
+                                <span class="dot"></span>
+                                <span class="text">---</span>
+                            </span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- ==================== FITUR 04: CHART MONITORING ==================== -->
+            <section class="charts-section glassmorphic">
+                <div class="section-header">
+                    <h2>MONITORING GRAFIK REAL-TIME</h2>
+                    <div class="chart-controls">
+                        <button id="btn-chart-pause" class="btn-secondary">⏸ Pause</button>
+                        <button id="btn-chart-clear" class="btn-secondary">🗑 Hapus Data</button>
+                    </div>
+                </div>
+                
+                <div class="charts-layout">
+                    <!-- Grafik Utama: Target vs Aktual -->
+                    <div class="chart-container main-chart glassmorphic">
+                        <canvas id="chart-angles"></canvas>
+                    </div>
+                    
+                    <!-- Grafik Input/Output Fuzzy -->
+                    <div class="charts-sub-layout">
+                        <div class="chart-container sub-chart glassmorphic">
+                            <canvas id="chart-fuzzy-inputs"></canvas>
+                        </div>
+                        <div class="chart-container sub-chart glassmorphic">
+                            <canvas id="chart-fuzzy-output"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ==================== FITUR 05: RIWAYAT SESI TABLE ==================== -->
+            <section class="history-section glassmorphic">
+                <div class="section-header">
+                    <h2>RIWAYAT SESI REHABILITASI</h2>
+                    <div class="history-controls">
+                        <span id="txt-total-sessions" class="session-counter">Total: 0 sesi</span>
+                        <input type="text" id="filter-history" placeholder="Filter kategori/status...">
+                        
+                        <input type="file" id="file-csv-input" accept=".csv" style="display: none;">
+                        <button id="btn-upload-csv" class="btn-secondary">📂 Buka CSV</button>
+                        <button id="btn-request-esp" class="btn-secondary">📡 Minta Data ESP32</button>
+                        <button id="btn-export-excel" class="btn-success">📊 Export Excel</button>
+                        <button id="btn-clear-table" class="btn-secondary">🗑 Hapus Tabel</button>
+                    </div>
+                </div>
+                
+                <!-- Table Wrapper -->
+                <div class="table-container">
+                    <table class="history-table" id="table-history">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Sudut Target (°)</th>
+                                <th>Rep. Target</th>
+                                <th>Rep. Selesai</th>
+                                <th>Median Pre-Test (°)</th>
+                                <th>Median Post-Test (°)</th>
+                                <th>Delta ROM (°)</th>
+                                <th>Skor Fuzzy</th>
+                                <th>Kategori</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <tr>
+                                <td colspan="10" class="empty-row">Belum ada data dimuat. Silakan buka CSV atau minta data dari ESP32.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+        
+        <footer class="app-footer">
+            <p>&copy; 2026 - Monitoring Sistem Rehabilitasi Sendi Siku 1-DOF. Tugas Akhir.</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript logic -->
+    <script src="/js/app.js?v=5"></script>
+</body>
+</html>
