@@ -2,7 +2,7 @@
 
 Final project: a post-stroke elbow exercise device driven by a closed-loop stepper. It measures elbow range of motion before and after training, then scores the session with Fuzzy Mamdani logic. Results appear on an LCD and a live web dashboard.
 
-![Fuzzy score on the device LCD](images/fuzzy-result.jpg)
+![Inventor model of the device](images/device-cad.png)
 
 ## Overview
 
@@ -12,12 +12,17 @@ Final project: a post-stroke elbow exercise device driven by a closed-loop stepp
 | **Actuator** | NEMA 34 closed-loop stepper, HBS860H driver, 1:3 reduction |
 | **Angle sensor** | AS5600 12-bit magnetic sensor |
 | **Interface** | LCD 20x4, Python web dashboard |
+| **Validation** | MATLAB Fuzzy Logic Toolbox |
 | **Data** | LittleFS on the device, Excel export from the dashboard |
 | **Safety** | Emergency stop, STOP button, NC limit switches |
 
 ## System
 
 ![System block diagram](images/block-diagram.png)
+
+![Device wiring](images/wiring.png)
+
+![Web dashboard](images/dashboard.png)
 
 ## Results
 
@@ -50,6 +55,24 @@ The two inputs are the post-test median angle (0-100°) and the change from pre-
 | 30 to below 50 | Low |
 | 50 to below 75 | Medium |
 | 75 and above | Good |
+
+## MATLAB validation
+
+The fuzzy system was also built in the MATLAB Fuzzy Logic Toolbox, and the score from the ESP32-C6 was compared with MATLAB on 14 data pairs. Ten pairs matched exactly, four differed by 0.02 to 0.05, and the average error was 0.025%.
+
+![Fuzzy process flowchart](images/fuzzy-flowchart.png)
+
+![Membership functions for post-test angle](images/matlab-mf-post-test.png)
+
+![Membership functions for delta angle](images/matlab-mf-delta.png)
+
+![Membership functions for fuzzy score](images/matlab-mf-output.png)
+
+![Fuzzy rule list](images/matlab-rules.png)
+
+![MATLAB rule viewer](images/matlab-rule-viewer.png)
+
+`matlab/Fuzzy_alat.fis` can be opened with `fuzzy` in MATLAB. In this file, the post-test Low and Medium sets are [0 0 30 50] and [30 55 80], while the firmware uses [0 0 20 40] and [30 50 70]. Both give the same score for post-test angles up to 20°.
 
 ## Pin map
 
@@ -84,7 +107,8 @@ Open http://localhost:8000. The ESP32 connects over USB serial or Wi-Fi TCP on p
 | `dashboard/` | FastAPI backend and web frontend |
 | `cad/` | Inventor model of the device and STL for the AS5600 holder |
 | `schematic/` | Fritzing wiring file |
-| `images/` | LCD photo and block diagram |
+| `matlab/` | Fuzzy system file for MATLAB |
+| `images/` | CAD renders, wiring, dashboard and MATLAB screenshots |
 
 ## Safety
 
