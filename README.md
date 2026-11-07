@@ -15,6 +15,10 @@ Final project: a post-stroke elbow exercise device driven by a closed-loop stepp
 | **Data** | LittleFS on the device, Excel export from the dashboard |
 | **Safety** | Emergency stop, STOP button, NC limit switches |
 
+## System
+
+![System block diagram](images/block-diagram.png)
+
 ## Results
 
 | Metric | Value |
@@ -78,7 +82,9 @@ Open http://localhost:8000. The ESP32 connects over USB serial or Wi-Fi TCP on p
 |---|---|
 | `firmware/` | ESP32-C6 Arduino program |
 | `dashboard/` | FastAPI backend and web frontend |
-| `images/` | Device photos |
+| `cad/` | Inventor model of the device and STL for the AS5600 holder |
+| `schematic/` | Fritzing wiring file |
+| `images/` | LCD photo and block diagram |
 
 ## Safety
 
