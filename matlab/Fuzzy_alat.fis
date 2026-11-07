@@ -15,8 +15,8 @@ DefuzzMethod='centroid'
 Name='Median_post-test'
 Range=[0 100]
 NumMFs=3
-MF1='Rendah':'trapmf',[0 0 30 50]
-MF2='Sedang':'trimf',[30 55 80]
+MF1='Rendah':'trapmf',[0 0 20 40]
+MF2='Sedang':'trimf',[30 50 70]
 MF3='Tinggi':'trapmf',[60 80 100 100]
 
 [Input2]

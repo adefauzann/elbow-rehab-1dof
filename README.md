@@ -72,7 +72,7 @@ The fuzzy system was also built in the MATLAB Fuzzy Logic Toolbox, and the score
 
 ![MATLAB rule viewer](images/matlab-rule-viewer.png)
 
-`matlab/Fuzzy_alat.fis` can be opened with `fuzzy` in MATLAB. In this file, the post-test Low and Medium sets are [0 0 30 50] and [30 55 80], while the firmware uses [0 0 20 40] and [30 50 70]. Both give the same score for post-test angles up to 20°.
+`matlab/Fuzzy_alat.fis` can be opened with `fuzzy` in MATLAB. It uses the same parameters as the firmware. On a grid of 861 input pairs, its score matches the firmware algorithm within 0.001, and the worked example of 10.5° and 10.5° gives 58.27 on both.
 
 ## Pin map
 
